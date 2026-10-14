@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Math League World Cup — Year 6</title>
+<style>
+  :root{
+    --pitch:#0b6b3a;
+    --gold:#f5c542;
+    --ink:#0f172a;
+    --muted:#64748b;
+    --line:#e2e8f0;
+    --red:#dc2626;
+    --blue:#2563eb;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #d1fae5 0%, transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, #fef3c7 0%, transparent 50%),
+      #f8fafc;
+    color:var(--ink);
+    font-size:14px;
+  }
+  .app{max-width:1500px;margin:0 auto;padding:16px 18px 40px}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    background:linear-gradient(135deg,#065f46 0%, #0b6b3a 45%, #047857 100%);
+    border-radius:20px;padding:20px 24px;color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 14px 40px rgba(6,95,70,.35);margin-bottom:16px;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 40px, transparent 40px 80px),
+      radial-gradient(circle at 88% 30%, rgba(245,197,66,.35), transparent 45%);
+    pointer-events:none;
+  }
+  .hero-inner{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .hero-brand{display:flex;align-items:center;gap:16px}
+  .hero-logo{
+    width:62px;height:62px;border-radius:18px;display:grid;place-items:center;
+    font-size:32px;background:rgba(255,255,255,.14);
+    border:2px solid rgba(255,255,255,.35);box-shadow:0 10px 24px rgba(0,0,0,.25);
+  }
+  .hero h1{margin:0;font-size:26px;letter-spacing:-.5px}
+  .hero p{margin:5px 0 0;font-size:13.5px;opacity:.92;font-weight:600}
+  .hero-badge{
+    background:var(--gold);color:#4a3300;font-weight:900;font-size:12px;
+    padding:7px 14px;border-radius:999px;letter-spacing:1px;
+    box-shadow:0 6px 16px rgba(0,0,0,.25);
+  }
+
+  /* ---------- Tabs ---------- */
+  .tabs{
+    display:flex;gap:6px;flex-wrap:wrap;background:#fff;padding:7px;
+    border-radius:14px;border:1px solid var(--line);
+    box-shadow:0 1px 3px rgba(15,23,42,.06);width:fit-content;margin-bottom:16px;
+  }
+  .tab{
+    border:0;background:transparent;padding:10px 18px;border-radius:10px;
+    font:inherit;font-weight:700;color:#475569;cursor:pointer;transition:.15s;
+  }
+  .tab:hover{background:#f1f5f9;color:var(--ink)}
+  .tab.active{
+    background:linear-gradient(135deg,#059669,#0b6b3a);
+    color:#fff;box-shadow:0 6px 16px rgba(5,150,105,.4);
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    border:1px solid var(--line);background:#fff;padding:10px 16px;border-radius:11px;
+    font:inherit;font-weight:700;color:#334155;cursor:pointer;transition:.15s;
+    display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
+  }
+  .btn:hover{background:#f8fafc;border-color:#cbd5e1;transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn.primary{
+    background:linear-gradient(135deg,#059669,#0b6b3a);
+    border-color:transparent;color:#fff;box-shadow:0 6px 16px rgba(5,150,105,.4);
+  }
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.gold{
+    background:linear-gradient(135deg,#f5c542,#d4a017);
+    border-color:transparent;color:#3d2c00;box-shadow:0 6px 16px rgba(212,160,23,.4);
+  }
+  .btn.ghost{background:transparent}
+  .btn.danger{color:var(--red);border-color:#fecaca}
+  .btn.danger:hover{background:#fef2f2;border-color:#fca5a5}
+  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+  .btn.sm{padding:6px 12px;font-size:12px;border-radius:9px}
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .search{position:relative;flex:0 1 260px;min-width:180px}
+  .search input{
+    width:100%;padding:10px 14px 10px 36px;border-radius:11px;border:1px solid var(--line);
+    background:#fff;font:inherit;color:var(--ink);transition:.15s;
+  }
+  .search input:focus{outline:none;border-color:#059669;box-shadow:0 0 0 3px rgba(5,150,105,.18)}
+  .search::before{content:"🔍";position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.5;pointer-events:none}
+  .spacer{flex:1}
+
+  /* ---------- Strip ---------- */
+  .strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+  .chip{
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 15px;
+    display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(15,23,42,.05);
+    transition:transform .15s, box-shadow .15s;
+  }
+  .chip:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.08)}
+  .chip-ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex:0 0 auto}
+  .chip-ico.g{background:#d1fae5;color:#047857}
+  .chip-ico.y{background:#fef3c7;color:#b45309}
+  .chip-ico.b{background:#dbeafe;color:#1d4ed8}
+  .chip-ico.p{background:#ede9fe;color:#6d28d9}
+  .chip-body{display:flex;flex-direction:column;gap:1px;min-width:0}
+  .chip-k{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:#94a3b8;font-weight:800}
+  .chip-v{font-size:17px;font-weight:800;color:#1e293b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* ---------- Group Stage ---------- */
+  .section-title{
+    font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;
+    color:#64748b;margin:18px 0 10px;display:flex;align-items:center;gap:8px;
+  }
+  .groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px}
+  .group-card{
+    background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    box-shadow:0 2px 8px rgba(15,23,42,.05);
+  }
+  .group-head{
+    background:linear-gradient(135deg,#0b6b3a,#047857);color:#fff;
+    padding:11px 16px;font-weight:800;display:flex;justify-content:space-between;align-items:center;
+    letter-spacing:.4px;
+  }
+  .group-head .grp-tag{font-size:11px;background:rgba(255,255,255,.2);padding:3px 10px;border-radius:999px}
+  .group-table{width:100%;border-collapse:collapse;font-size:13px}
+  .group-table th{
+    background:#f8fafc;color:#64748b;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;
+    padding:8px 8px;text-align:center;border-bottom:1px solid var(--line);font-weight:800;
+  }
+  .group-table th:first-child{text-align:left;padding-left:14px}
+  .group-table td{padding:9px 8px;text-align:center;border-bottom:1px solid #f1f5f9;font-weight:600}
+  .group-table td:first-child{text-align:left;padding-left:14px;font-weight:700;color:#1e293b}
+  .group-table tr:last-child td{border-bottom:0}
+  .group-table tr.qualified td{background:#ecfdf5}
+  .group-table tr.qualified td:first-child::before{content:"✅ ";font-size:11px}
+  .group-table tr.eliminated td{opacity:.55}
+  .group-table tr:hover td{background:#eef2ff}
+  .group-table tr.qualified:hover td{background:#d1fae5}
+  .pos-badge{
+    display:inline-grid;place-items:center;width:22px;height:22px;border-radius:7px;
+    background:#f1f5f9;color:#475569;font-weight:800;font-size:11px;
+  }
+  .pos-badge.p1{background:linear-gradient(135deg,#f5c542,#d4a017);color:#3d2c00}
+  .pos-badge.p2{background:linear-gradient(135deg,#cbd5e1,#94a3b8);color:#fff}
+
+  /* ---------- Bracket ---------- */
+  .bracket-wrap{
+    background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;
+    overflow-x:auto;box-shadow:0 2px 8px rgba(15,23,42,.05);
+  }
+  .bracket{display:flex;gap:26px;min-width:max-content;padding:6px 2px}
+  .round{display:flex;flex-direction:column;justify-content:space-around;gap:14px;min-width:240px}
+  .round-title{
+    text-align:center;font-size:11px;font-weight:800;text-transform:uppercase;
+    letter-spacing:1px;color:#64748b;margin-bottom:4px;
+  }
+  .match{
+    background:#f8fafc;border:1.5px solid var(--line);border-radius:13px;overflow:hidden;
+    transition:.15s;position:relative;
+  }
+  .match:hover{border-color:#059669;box-shadow:0 6px 18px rgba(5,150,105,.15)}
+  .match.done{border-color:#a7f3d0;background:#f0fdf4}
+  .match.live{border-color:#f59e0b;background:#fffbeb;box-shadow:0 0 0 3px rgba(245,158,11,.18)}
+  .match-head{
+    font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;
+    color:#94a3b8;padding:5px 10px;background:#fff;border-bottom:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .match.done .match-head{background:#ecfdf5;color:#047857}
+  .match.live .match-head{background:#fef3c7;color:#b45309}
+  .side{
+    display:flex;align-items:center;gap:8px;padding:8px 10px;font-weight:700;font-size:13px;
+    border-bottom:1px solid #f1f5f9;
+  }
+  .side:last-child{border-bottom:0}
+  .side .flag{font-size:15px;flex:0 0 auto}
+  .side .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .side .sc{
+    font-weight:900;font-size:14px;min-width:22px;text-align:center;
+    background:#e2e8f0;color:#475569;border-radius:6px;padding:1px 6px;
+  }
+  .side.win{background:#ecfdf5}
+  .side.win .sc{background:#059669;color:#fff}
+  .side.lose{opacity:.6}
+  .side.lose .sc{background:#f1f5f9;color:#94a3b8}
+  .side.tbd{color:#94a3b8;font-style:italic;font-weight:600}
+  .match-foot{
+    padding:6px 10px;display:flex;gap:6px;justify-content:flex-end;
+    background:#fff;border-top:1px solid var(--line);
+  }
+  .match-foot button{
+    border:1px solid var(--line);background:#fff;border-radius:8px;
+    padding:5px 11px;font:inherit;font-size:11px;font-weight:700;cursor:pointer;
+    color:#334155;transition:.12s;
+  }
+  .match-foot button:hover{background:#ecfdf5;border-color:#a7f3d0;color:#047857}
+  .match-foot button.play{background:#059669;color:#fff;border-color:transparent}
+  .match-foot button.play:hover{filter:brightness(1.08)}
+
+  /* ---------- Champion ---------- */
+  .champion{
+    background:linear-gradient(135deg,#fffbeb,#fef3c7);
+    border:2px solid var(--gold);border-radius:20px;padding:26px;text-align:center;
+    margin-top:18px;box-shadow:0 12px 40px rgba(212,160,23,.25);
+    position:relative;overflow:hidden;
+  }
+  .champion::before{
+    content:"🏆";position:absolute;font-size:180px;opacity:.06;
+    top:50%;left:50%;transform:translate(-50%,-50%);
+  }
+  .champion-inner{position:relative;z-index:2}
+  .champion h2{margin:0 0 6px;font-size:22px;color:#78350f;letter-spacing:-.3px}
+  .champion .name{font-size:30px;font-weight:900;color:#92400e;margin:8px 0}
+  .champion .sub{font-size:13px;color:#a16207;font-weight:700}
+
+  /* ---------- Modal ---------- */
+  dialog{border:0;padding:0;box-shadow:0 26px 70px rgba(15,23,42,.35)}
+  dialog::backdrop{background:rgba(15,23,42,.5);backdrop-filter:blur(4px)}
+  dialog#modal{border-radius:18px;width:min(520px,94vw)}
+  dialog#quizModal{border-radius:20px;width:min(760px,96vw);max-height:94vh;overflow:hidden}
+  dialog#manageModal{border-radius:18px;width:min(680px,96vw);max-height:92vh;overflow:hidden}
+
+  .modal-body{padding:22px;display:flex;flex-direction:column;gap:14px}
+  .modal-body h3{margin:0;font-size:18px;letter-spacing:-.2px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field span{font-size:12px;font-weight:700;color:var(--muted)}
+  .field input,.field select,.field textarea{
+    padding:10px 12px;border:1px solid var(--line);border-radius:10px;
+    font:inherit;background:#f8fafc;color:var(--ink);transition:.15s;font-family:inherit;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{
+    outline:none;border-color:#059669;background:#fff;box-shadow:0 0 0 3px rgba(5,150,105,.15);
+  }
+  .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
+
+  /* ---------- Quiz Modal ---------- */
+  .quiz-head{
+    background:linear-gradient(135deg,#0b6b3a,#047857);color:#fff;
+    padding:16px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;
+    position:relative;
+  }
+  .quiz-head h3{margin:0;font-size:17px}
+  .quiz-head .meta{font-size:12px;opacity:.9;font-weight:600;margin-top:3px}
+  .quiz-head .x{
+    border:0;background:rgba(255,255,255,.18);color:#fff;border-radius:10px;
+    width:34px;height:34px;font-size:15px;cursor:pointer;transition:.15s;
+  }
+  .quiz-head .x:hover{background:rgba(255,255,255,.32)}
+
+  /* Timer bar */
+  .timer-wrap{
+    background:rgba(255,255,255,.15);height:6px;width:100%;position:relative;overflow:hidden;
+  }
+  .timer-fill{
+    height:100%;width:100%;background:linear-gradient(90deg,#f5c542,#ef4444);
+    transition:width 1s linear, background .3s;
+    border-radius:0 3px 3px 0;
+  }
+  .timer-fill.low{background:linear-gradient(90deg,#ef4444,#b91c1c)}
+  .timer-num{
+    position:absolute;right:12px;top:50%;transform:translateY(-50%);
+    font-size:11px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);
+    letter-spacing:.5px;
+  }
+
+  .quiz-body{padding:20px 22px;overflow-y:auto;max-height:58vh}
+  .quiz-body::-webkit-scrollbar{width:9px}
+  .quiz-body::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:8px}
+
+  /* Scoreboard */
+  .scoreboard{
+    display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;
+    background:#f8fafc;border:1px solid var(--line);border-radius:14px;
+    padding:12px 16px;margin-bottom:16px;
+  }
+  .sb-team{display:flex;align-items:center;gap:10px;min-width:0}
+  .sb-team.right{flex-direction:row-reverse;text-align:right}
+  .sb-flag{font-size:26px;flex:0 0 auto}
+  .sb-info{min-width:0}
+  .sb-name{font-weight:800;font-size:13.5px;color:#1e293b;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sb-active{font-size:10.5px;font-weight:800;color:#059669;
+    text-transform:uppercase;letter-spacing:.5px;margin-top:2px;
+    animation:pulse 1.2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .sb-score{
+    font-size:28px;font-weight:900;color:#0b6b3a;
+    background:#d1fae5;border-radius:12px;padding:4px 16px;min-width:60px;
+    text-align:center;
+  }
+  .sb-vs{font-size:11px;font-weight:900;color:#94a3b8;letter-spacing:1px}
+
+  .q-topic{
+    display:inline-block;background:#d1fae5;color:#047857;font-size:10.5px;font-weight:800;
+    padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px;
+    margin-bottom:8px;
+  }
+  .q-text{font-size:16px;font-weight:600;line-height:1.55;margin:0 0 16px;color:#1e293b}
+  .q-options{display:flex;flex-direction:column;gap:9px}
+  .q-opt{
+    display:flex;align-items:center;gap:11px;padding:13px 16px;border-radius:12px;
+    border:1.5px solid var(--line);background:#f8fafc;cursor:pointer;transition:.13s;
+    font-weight:600;font-size:14px;position:relative;
+  }
+  .q-opt:hover{border-color:#059669;background:#ecfdf5;transform:translateX(3px)}
+  .q-opt.sel{border-color:#059669;background:#d1fae5}
+  .q-opt.right{border-color:#059669;background:#d1fae5;animation:pop .35s}
+  .q-opt.wrong{border-color:#dc2626;background:#fee2e2;animation:shake .35s}
+  .q-opt.disabled{cursor:not-allowed;opacity:.65}
+  .q-opt .ltr{
+    width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+    background:#e2e8f0;color:#475569;font-weight:900;font-size:13px;flex:0 0 auto;
+  }
+  .q-opt.sel .ltr,.q-opt.right .ltr{background:#059669;color:#fff}
+  .q-opt.wrong .ltr{background:#dc2626;color:#fff}
+  .q-opt .mark{margin-left:auto;font-size:16px;font-weight:900}
+  .q-opt.right .mark{color:#059669}
+  .q-opt.wrong .mark{color:#dc2626}
+
+  @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  /* Feedback banner */
+  .feedback{
+    display:none;padding:12px 16px;border-radius:12px;font-weight:800;font-size:14px;
+    margin-top:14px;text-align:center;
+  }
+  .feedback.show{display:block;animation:pop .35s}
+  .feedback.correct{background:#d1fae5;color:#047857;border:1px solid #a7f3d0}
+  .feedback.wrong{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+  .feedback.timeout{background:#fef3c7;color:#b45309;border:1px solid #fde68a}
+
+  .quiz-foot{
+    padding:14px 22px;border-top:1px solid var(--line);background:#fafbff;
+    display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+  }
+  .quiz-progress{font-size:12px;font-weight:700;color:#64748b}
+  .quiz-progress b{color:#059669}
+
+  /* ---------- Manage Modal ---------- */
+  .manage-head{
+    background:linear-gradient(135deg,#0b6b3a,#047857);color:#fff;
+    padding:16px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;
+  }
+  .manage-head h3{margin:0;font-size:17px}
+  .manage-head .meta{font-size:12px;opacity:.9;font-weight:600;margin-top:3px}
+  .manage-head .x{
+    border:0;background:rgba(255,255,255,.18);color:#fff;border-radius:10px;
+    width:34px;height:34px;font-size:15px;cursor:pointer;transition:.15s;
+  }
+  .manage-head .x:hover{background:rgba(255,255,255,.32)}
+  .manage-body{padding:16px 20px;overflow-y:auto;max-height:58vh}
+  .manage-body::-webkit-scrollbar{width:9px}
+  .manage-body::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:8px}
+  .manage-list{display:flex;flex-direction:column;gap:7px}
+  .student-row{
+    display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:11px;
+    border:1px solid var(--line);background:#f8fafc;transition:.13s;
+  }
+  .student-row:hover{background:#fff;border-color:#cbd5e1}
+  .student-row .avatar{
+    width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+    font-size:15px;font-weight:800;color:#fff;flex:0 0 auto;
+    background:linear-gradient(135deg,#059669,#0b6b3a);
+  }
+  .student-row input.nm{
+    flex:1;border:1px solid transparent;background:transparent;padding:6px 8px;border-radius:8px;
+    font:inherit;font-weight:700;color:#1e293b;min-width:0;
+  }
+  .student-row input.nm:hover{border-color:#cbd5e1;background:#fff}
+  .student-row input.nm:focus{outline:none;border-color:#059669;background:#fff;box-shadow:0 0 0 3px rgba(5,150,105,.14)}
+  .student-row select.grp{
+    border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 8px;
+    font:inherit;font-size:12px;font-weight:700;color:#4338ca;cursor:pointer;
+  }
+  .student-row select.grp:focus{outline:none;border-color:#059669}
+  .student-row .del{
+    border:0;background:transparent;color:#cbd5e1;cursor:pointer;
+    border-radius:8px;width:28px;height:28px;display:grid;place-items:center;
+    font-size:14px;transition:.13s;flex:0 0 auto;
+  }
+  .student-row .del:hover{background:#fee2e2;color:#dc2626}
+  .manage-foot{
+    padding:14px 20px;border-top:1px solid var(--line);background:#fafbff;
+    display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;
+  }
+
+  .empty{padding:40px 20px;text-align:center;color:#94a3b8;font-weight:600}
+
+  @media (max-width:700px){
+    .hero h1{font-size:20px}
+    .hero-logo{width:50px;height:50px;font-size:24px}
+    .app{padding:10px}
+    .groups{grid-template-columns:1fr}
+    .scoreboard{grid-template-columns:1fr auto 1fr;padding:10px}
+    .sb-score{font-size:22px;padding:3px 12px}
+    .sb-flag{font-size:20px}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===== HERO ===== -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-brand">
+        <div class="hero-logo">🏆</div>
+        <div>
+          <h1>Math League World Cup</h1>
+          <p>Year 6 · Class 6A &amp; 6C · 40-second timer per question</p>
+        </div>
+      </div>
+      <div class="hero-badge">⚽ WORLD CUP EDITION</div>
+    </div>
+  </header>
+
+  <!-- ===== TABS ===== -->
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="groups">🏟️ Group Stage</button>
+    <button class="tab" data-tab="bracket">🏅 Knockout Bracket</button>
+    <button class="tab" data-tab="stats">📊 Statistics</button>
+    <button class="tab" data-tab="topics">📚 Topics</button>
+  </div>
+
+  <!-- ===== SUMMARY STRIP ===== -->
+  <div class="strip" id="strip"></div>
+
+  <!-- ===== TOOLBAR ===== -->
+  <div class="toolbar">
+    <div class="search">
+      <input id="search" type="search" placeholder="Search student…" autocomplete="off">
+    </div>
+    <div class="spacer"></div>
+    <button class="btn" id="btnManage">👥 Manage Students</button>
+    <button class="btn primary" id="btnAddStudent">+ Add Student</button>
+    <button class="btn gold" id="btnResetTournament">↻ Reset Tournament</button>
+  </div>
+
+  <!-- ===== CONTENT ===== -->
+  <div id="content"></div>
+
+</div>
+
+<!-- ===== MODAL (generic) ===== -->
+<dialog id="modal">
+  <form id="modalForm" class="modal-body">
+    <h3 id="modalTitle">Title</h3>
+    <div id="modalBody"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn ghost" id="modalCancel">Cancel</button>
+      <button type="submit" class="btn primary">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ===== QUIZ MODAL ===== -->
+<dialog id="quizModal">
+  <div class="quiz-head">
+    <div>
+      <h3 id="quizTitle">Match</h3>
+      <div class="meta" id="quizMeta">Round · Topic</div>
+    </div>
+    <button class="x" id="quizClose">✕</button>
+  </div>
+  <div class="timer-wrap">
+    <div class="timer-fill" id="timerFill"></div>
+    <div class="timer-num" id="timerNum">40s</div>
+  </div>
+  <div class="quiz-body" id="quizBody"></div>
+  <div class="quiz-foot">
+    <div class="quiz-progress" id="quizProgress"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn ghost" id="quizCancel">Cancel</button>
+      <button class="btn primary" id="quizSubmit" disabled>Submit Answer</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- ===== MANAGE STUDENTS MODAL ===== -->
+<dialog id="manageModal">
+  <div class="manage-head">
+    <div>
+      <h3>👥 Manage Students</h3>
+      <div class="meta" id="manageMeta">Rename, reassign groups, or remove students</div>
+    </div>
+    <button class="x" id="manageClose">✕</button>
+  </div>
+  <div class="manage-body">
+    <div class="manage-list" id="manageList"></div>
+  </div>
+  <div class="manage-foot">
+    <button class="btn primary" id="manageAddBtn">+ Add Student</button>
+    <div style="display:flex;gap:8px">
+      <button class="btn ghost" id="manageCancel">Cancel</button>
+      <button class="btn primary" id="manageSave">Save Changes</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* =========================================================
+   HELPERS
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const uid = () => Math.random().toString(36).slice(2,9);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => (
+  {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
+));
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+
+const QUESTION_TIME = 40; // seconds
+
+/* =========================================================
+   QUESTION BANK
+   ========================================================= */
+const QUESTION_BANK = {
+  "Place Value":[
+    {q:"What is the value of the digit 7 in 4,572,318?",options:["7","70","70,000","700,000"],answer:2},
+    {q:"Write 3,040,006 in words.",options:["Three million, forty thousand and six","Three million and forty-six","Three hundred and four thousand and six","Three million, four hundred and six"],answer:0},
+    {q:"Which number is 1,000 more than 89,999?",options:["88,999","90,000","90,999","99,999"],answer:2},
+    {q:"In 6,285,431 what does the 8 represent?",options:["8,000","80,000","800","800,000"],answer:1},
+    {q:"Which is the largest number? 0.7, 0.07, 0.77, 0.707",options:["0.7","0.07","0.77","0.707"],answer:2}
+  ],
+  "Rounding":[
+    {q:"Round 4,872 to the nearest 100.",options:["4,800","4,900","4,870","5,000"],answer:1},
+    {q:"Round 3.678 to 2 decimal places.",options:["3.67","3.68","3.7","3.6"],answer:1},
+    {q:"Round 27,365 to the nearest 1,000.",options:["27,000","27,400","27,300","28,000"],answer:0},
+    {q:"Round 0.845 to 1 decimal place.",options:["0.8","0.9","0.84","1.0"],answer:0},
+    {q:"Round 99.95 to 1 decimal place.",options:["99.9","100.0","99.0","100.9"],answer:1}
+  ],
+  "Sequence":[
+    {q:"Find the next term: 3, 7, 11, 15, __",options:["18","19","20","21"],answer:1},
+    {q:"What is the rule? 2, 6, 18, 54, __",options:["Add 4","Multiply by 3","Multiply by 2","Add 12"],answer:1},
+    {q:"Next term: 1, 4, 9, 16, 25, __",options:["30","36","49","32"],answer:1},
+    {q:"What is the 10th term of 5, 10, 15, 20…?",options:["45","50","55","60"],answer:1},
+    {q:"Sequence: 100, 90, 81, 73, 66, __",options:["60","61","59","62"],answer:0}
+  ],
+  "Special Numbers":[
+    {q:"Which of these is a prime number?",options:["21","27","29","33"],answer:2},
+    {q:"Which is a square number?",options:["12","16","20","24"],answer:1},
+    {q:"Which is a cube number?",options:["8","9","12","16"],answer:0},
+    {q:"How many prime numbers are there between 10 and 20?",options:["2","3","4","5"],answer:1},
+    {q:"Which number is both square and cube?",options:["16","27","64","81"],answer:2}
+  ],
+  "Factors & Multiples":[
+    {q:"What is the HCF of 24 and 36?",options:["6","8","12","18"],answer:2},
+    {q:"What is the LCM of 6 and 8?",options:["12","18","24","48"],answer:2},
+    {q:"Which is a factor of 42?",options:["5","7","8","9"],answer:1},
+    {q:"List the first 3 multiples of 9.",options:["9, 18, 27","9, 19, 29","1, 9, 18","9, 27, 45"],answer:0},
+    {q:"HCF of 18 and 30?",options:["3","6","9","15"],answer:1}
+  ],
+  "Mean, Median, Mode & Range":[
+    {q:"Find the mean of 4, 7, 9, 12.",options:["7","8","9","10"],answer:1},
+    {q:"Find the median of 3, 8, 5, 9, 2.",options:["5","6","8","9"],answer:0},
+    {q:"Find the mode of 4, 4, 6, 7, 8, 8, 8.",options:["4","6","7","8"],answer:3},
+    {q:"Find the range of 12, 5, 18, 7, 20.",options:["13","15","18","20"],answer:1},
+    {q:"Mean of 10, 20, 30, 40, 50?",options:["25","30","35","40"],answer:1}
+  ],
+  "Integers":[
+    {q:"What is -5 + 8?",options:["-3","3","13","-13"],answer:1},
+    {q:"What is -7 − (−4)?",options:["-11","-3","3","11"],answer:1},
+    {q:"What is (-3) × 6?",options:["-18","18","-9","9"],answer:0},
+    {q:"What is -20 ÷ 4?",options:["-5","5","-4","4"],answer:0},
+    {q:"Which is smaller: -8 or -3?",options:["-8","-3","They are equal","Cannot tell"],answer:0}
+  ],
+  "Decimals":[
+    {q:"What is 3.6 + 2.75?",options:["6.35","6.25","5.35","6.31"],answer:0},
+    {q:"What is 8.4 − 3.75?",options:["4.65","4.75","5.65","4.55"],answer:0},
+    {q:"What is 0.6 × 0.4?",options:["0.24","2.4","0.024","0.20"],answer:0},
+    {q:"What is 4.8 ÷ 0.6?",options:["0.8","8","0.08","80"],answer:1},
+    {q:"Which is largest? 0.5, 0.45, 0.55, 0.405",options:["0.5","0.45","0.55","0.405"],answer:2}
+  ],
+  "Changing Letters & Shapes to Numbers":[
+    {q:"If a = 5, what is 3a + 2?",options:["15","17","21","25"],answer:1},
+    {q:"If x = 4 and y = 3, find 2x + y.",options:["10","11","14","24"],answer:1},
+    {q:"If n = 7, what is n² − 3?",options:["46","49","42","28"],answer:0},
+    {q:"If p = 2 and q = 6, find p + 2q.",options:["14","16","10","20"],answer:0},
+    {q:"Solve: 5m = 35, so m = ?",options:["5","6","7","8"],answer:2}
+  ]
+};
+
+/* =========================================================
+   ROSTER — Class 6A & 6C
+   ========================================================= */
+const ROSTER = {
+  '6A': [
+    'Seleem','Ahmed Taha','Abdarhman Edris','Omar','Adam Ahmed','Gebril',
+    'Hala','Layla','Khalid','Yassin','Ibrahim','Alia','Mostafa','Talia',
+    'Lara','Zeyad','Melisa','Mira','Retal','Muhamed Edris'
+  ],
+  '6C': [
+    'Yamen','Nadine','Mohamed Ayman','Mohamed Ehab','Hamza Ahmed','Haya',
+    'Mousa','Hamza Moh.','Tala Ezz','Yassin','Younis','Abobakr','Abdallah',
+    'Hashem','Asia','Talia','Mustafa','Judy','Karma','Ali','Raween'
+  ]
+};
+
+const FLAG_POOL = [
+  '🇧🇷','🇦🇷','🇫🇷','🏴󠁧󠁢󠁥󠁮󠁧󠁿','🇪🇸','🇩🇪','🇵🇹','🇳🇱','🇮🇹','🇧🇪',
+  '🇭🇷','🇲🇦','🇯🇵','🇺🇸','🇲🇽','🇪🇬','🇰🇷','🇦🇺','🇨🇦','🇺🇾',
+  '🇨🇴','🇩🇰','🇨🇭','🇵🇱','🇸🇳','🇬🇭','🇹🇳','🇩🇿','🇸🇦','🇶🇦'
+];
+
+/* =========================================================
+   STATE + PERSISTENCE
+   ========================================================= */
+const STORAGE_KEY = "mathLeagueWorldCup.v3";
+
+function assignGroupsAuto(students){
+  const groups = ["A","B","C","D"];
+  students.forEach((s,i)=>{ s.group = groups[i % groups.length]; });
+}
+
+function buildDefaultState(){
+  const students = [];
+  Object.keys(ROSTER).forEach(cls=>{
+    ROSTER[cls].forEach(name=>{
+      students.push({
+        id: uid(), name, className: cls,
+        flag: FLAG_POOL[students.length % FLAG_POOL.length],
+        group: null,
+        played:0, won:0, drawn:0, lost:0,
+        points:0, goalsFor:0, goalsAgainst:0
+      });
+    });
+  });
+  assignGroupsAuto(students);
+  return {
+    students,
+    groups: ["A","B","C","D"],
+    topics: Object.keys(QUESTION_BANK),
+    matches: [],
+    champion: null,
+    tab: "groups",
+    search: "",
+    version: 3
+  };
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY) ||
+                localStorage.getItem("mathLeagueWorldCup.v2") ||
+                localStorage.getItem("mathLeagueWorldCup.v1");
+    if(!raw) return null;
+    const d = JSON.parse(raw);
+    if(!d || !Array.isArray(d.students)) return null;
+    const allTopics = Object.keys(QUESTION_BANK);
+    d.topics = [...new Set([...(d.topics||[]), ...allTopics])];
+    d.groups = d.groups || ["A","B","C","D"];
+    if(!Array.isArray(d.matches)) d.matches = [];
+    return d;
+  }catch(e){ return null; }
+}
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+
+let state = loadState() || buildDefaultState();
+
+/* =========================================================
+   STANDINGS
+   ========================================================= */
+function groupStandings(group){
+  return state.students
+    .filter(s=>s.group===group)
+    .sort((a,b)=>{
+      if(b.points!==a.points) return b.points-a.points;
+      const gdA = a.goalsFor-a.goalsAgainst;
+      const gdB = b.goalsFor-b.goalsAgainst;
+      if(gdB!==gdA) return gdB-gdA;
+      if(b.goalsFor!==a.goalsFor) return b.goalsFor-a.goalsFor;
+      return a.name.localeCompare(b.name);
+    });
+}
+
+/* =========================================================
+   RENDER: SUMMARY
+   ========================================================= */
+function renderStrip(){
+  const total = state.students.length;
+  const played = state.students.reduce((s,t)=>s+t.played,0)/2;
+  const koPlayed = state.matches.filter(m=>m.done).length;
+  $("#strip").innerHTML = `
+    <div class="chip"><div class="chip-ico g">👥</div>
+      <div class="chip-body"><span class="chip-k">Students</span><span class="chip-v">${total}</span></div></div>
+    <div class="chip"><div class="chip-ico y">⚽</div>
+      <div class="chip-body"><span class="chip-k">Group Matches Played</span><span class="chip-v">${played}</span></div></div>
+    <div class="chip"><div class="chip-ico b">🏅</div>
+      <div class="chip-body"><span class="chip-k">Knockout Played</span><span class="chip-v">${koPlayed}</span></div></div>
+    <div class="chip"><div class="chip-ico p">📚</div>
+      <div class="chip-body"><span class="chip-k">Topics</span><span class="chip-v">${state.topics.length}</span></div></div>
+  `;
+}
+
+/* =========================================================
+   RENDER: GROUP STAGE
+   ========================================================= */
+function renderGroups(){
+  const q = state.search.trim().toLowerCase();
+  let html = `<div class="section-title">🏟️ Group Stage — Top 2 from each group qualify</div>`;
+  html += `<div class="groups">`;
+
+  state.groups.forEach(g=>{
+    const full = groupStandings(g);
+    const shown = q ? full.filter(t=>t.name.toLowerCase().includes(q)) : full;
+    const qualIds = new Set(full.slice(0,2).map(t=>t.id));
+
+    html += `<div class="group-card">
+      <div class="group-head">
+        <span>Group ${g}</span>
+        <span class="grp-tag">${full.length} students</span>
+      </div>`;
+
+    if(shown.length === 0){
+      html += `<div class="empty" style="padding:24px">No students match.</div></div>`;
+      return;
+    }
+
+    html += `<table class="group-table">
+      <thead><tr>
+        <th>Student</th><th>P</th><th>W</th><th>D</th><th>L</th>
+        <th>GF</th><th>GA</th><th>GD</th><th>Pts</th>
+      </tr></thead><tbody>`;
+
+    shown.forEach(t=>{
+      const gd = t.goalsFor - t.goalsAgainst;
+      const isQual = qualIds.has(t.id);
+      const pos = full.indexOf(t)+1;
+      const posBadge = pos===1 ? "p1" : pos===2 ? "p2" : "";
+      html += `<tr class="${isQual?'qualified':''}">
+        <td><span class="pos-badge ${posBadge}">${pos}</span> ${t.flag} ${esc(t.name)}
+            <span style="font-size:10.5px;color:#94a3b8;font-weight:700"> · ${t.className}</span></td>
+        <td>${t.played}</td><td>${t.won}</td><td>${t.drawn}</td><td>${t.lost}</td>
+        <td>${t.goalsFor}</td><td>${t.goalsAgainst}</td>
+        <td>${gd>=0?"+":""}${gd}</td>
+        <td><b>${t.points}</b></td>
+      </tr>`;
+    });
+
+    html += `</tbody></table></div>`;
+  });
+
+  html += `</div>`;
+  $("#content").innerHTML = html;
+}
+
+/* =========================================================
+   BRACKET
+   ========================================================= */
+function buildBracketIfNeeded(){
+  if(state.matches.length) return;
+  const qualifiers = [];
+  state.groups.forEach(g=>{
+    const s = groupStandings(g);
+    if(s[0]) qualifiers.push({...s[0], seed:g+"1"});
+    if(s[1]) qualifiers.push({...s[1], seed:g+"2"});
+  });
+  if(qualifiers.length < 4) return;
+
+  const qfPairs = [
+    [qualifiers.find(t=>t.seed==="A1"), qualifiers.find(t=>t.seed==="B2")],
+    [qualifiers.find(t=>t.seed==="C1"), qualifiers.find(t=>t.seed==="D2")],
+    [qualifiers.find(t=>t.seed==="B1"), qualifiers.find(t=>t.seed==="A2")],
+    [qualifiers.find(t=>t.seed==="D1"), qualifiers.find(t=>t.seed==="C2")]
+  ].filter(p=>p[0] && p[1]);
+
+  state.matches = qfPairs.map(p=>({
+    id: uid(),
+    round: "Quarter-Final",
+    teamA: {id:p[0].id, name:p[0].name, flag:p[0].flag, className:p[0].className},
+    teamB: {id:p[1].id, name:p[1].name, flag:p[1].flag, className:p[1].className},
+    scoreA: null, scoreB: null,
+    done: false,
+    topic: null
+  }));
+  state.champion = null;
+  saveState();
+}
+
+function renderBracket(){
+  buildBracketIfNeeded();
+  const rounds = ["Quarter-Final","Semi-Final","Final"];
+  let html = `<div class="section-title">🏅 Knockout Bracket — Win to advance</div>`;
+
+  if(state.champion){
+    html += `<div class="champion"><div class="champion-inner">
+      <h2>🏆 World Cup Champion</h2>
+      <div class="name">${state.champion.flag} ${esc(state.champion.name)}</div>
+      <div class="sub">Congratulations! Winners of the Math League World Cup</div>
+    </div></div>`;
+  }
+
+  html += `<div class="bracket-wrap"><div class="bracket">`;
+
+  rounds.forEach(r=>{
+    const roundMatches = state.matches
+      .filter(m=>m.round===r)
+      .sort((a,b)=>a.id.localeCompare(b.id));
+    if(roundMatches.length === 0 && r!=="Quarter-Final") return;
+
+    html += `<div class="round"><div class="round-title">${r}${r==="Final"?" 🏆":""}</div>`;
+
+    if(roundMatches.length===0){
+      html += `<div class="match"><div class="match-head">TBD</div>
+        <div class="side tbd"><span class="flag">❔</span><span class="nm">Awaiting qualifiers…</span></div>
+        <div class="side tbd"><span class="flag">❔</span><span class="nm">Awaiting qualifiers…</span></div>
+      </div>`;
+    }
+
+    roundMatches.forEach(m=>{
+      const aWin = m.done && m.scoreA>m.scoreB;
+      const bWin = m.done && m.scoreB>m.scoreA;
+      const live = !m.done && m.teamA && m.teamB;
+      const cls = m.done ? "done" : live ? "live" : "";
+      const status = m.done ? "Final" : live ? "Ready" : "TBD";
+
+      html += `<div class="match ${cls}" data-match="${m.id}">
+        <div class="match-head">
+          <span>${status}</span><span>${m.topic ? esc(m.topic) : ""}</span>
+        </div>
+        <div class="side ${aWin?'win':bWin?'lose':''}">
+          <span class="flag">${m.teamA?m.teamA.flag:"❔"}</span>
+          <span class="nm">${m.teamA?esc(m.teamA.name):"TBD"}</span>
+          <span class="sc">${m.done?m.scoreA:(m.teamA?"–":"")}</span>
+        </div>
+        <div class="side ${bWin?'win':aWin?'lose':''}">
+          <span class="flag">${m.teamB?m.teamB.flag:"❔"}</span>
+          <span class="nm">${m.teamB?esc(m.teamB.name):"TBD"}</span>
+          <span class="sc">${m.done?m.scoreB:(m.teamB?"–":"")}</span>
+        </div>`;
+      if(!m.done && m.teamA && m.teamB){
+        html += `<div class="match-foot">
+          <button class="play" data-play="${m.id}">▶ Play Match</button>
+        </div>`;
+      }
+      html += `</div>`;
+    });
+
+    html += `</div>`;
+  });
+
+  html += `</div></div>`;
+  $("#content").innerHTML = html;
+}
+
+/* =========================================================
+   MATCH ENGINE WITH TIMER
+   ========================================================= */
+let activeMatch = null;
+let activeQuestions = [];
+let activeIndex = 0;
+let activeScoreA = 0;
+let activeScoreB = 0;
+let activeSelection = null;
+let activeAnswered = false;
+let timerInterval = null;
+let timeLeft = QUESTION_TIME;
+
+function pickQuestions(topic){
+  const bank = QUESTION_BANK[topic];
+  if(!bank || bank.length===0){
+    const allTopics = Object.keys(QUESTION_BANK);
+    const t = allTopics[Math.floor(Math.random()*allTopics.length)];
+    return { topic:t, questions:shuffle([...QUESTION_BANK[t]]).slice(0,3) };
+  }
+  return { topic, questions:shuffle([...bank]).slice(0,3) };
+}
+
+function startMatch(matchId){
+  const m = state.matches.find(x=>x.id===matchId);
+  if(!m) return;
+
+  const available = state.topics.filter(t=>QUESTION_BANK[t]);
+  const topic = available.length
+    ? available[Math.floor(Math.random()*available.length)]
+    : Object.keys(QUESTION_BANK)[0];
+  const {questions} = pickQuestions(topic);
+
+  activeMatch = m;
+  activeQuestions = questions;
+  activeIndex = 0;
+  activeScoreA = 0;
+  activeScoreB = 0;
+  activeSelection = null;
+  activeAnswered = false;
+
+  m.topic = topic;
+  saveState();
+
+  $("#quizTitle").textContent = `${m.teamA.name} vs ${m.teamB.name}`;
+  $("#quizMeta").textContent = `${m.round} · Topic: ${topic}`;
+  $("#quizModal").showModal();
+  renderQuizQuestion();
+}
+
+function startTimer(){
+  clearTimer();
+  timeLeft = QUESTION_TIME;
+  updateTimerUI();
+  timerInterval = setInterval(()=>{
+    timeLeft--;
+    updateTimerUI();
+    if(timeLeft <= 0){
+      clearTimer();
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function clearTimer(){
+  if(timerInterval){
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
+function updateTimerUI(){
+  const pct = Math.max(0, (timeLeft / QUESTION_TIME) * 100);
+  const fill = $("#timerFill");
+  const num = $("#timerNum");
+  if(!fill || !num) return;
+  fill.style.width = pct + "%";
+  num.textContent = Math.max(0, timeLeft) + "s";
+  fill.classList.toggle("low", timeLeft <= 10);
+  num.style.color = timeLeft <= 10 ? "#fecaca" : "#fff";
+}
+
+function handleTimeout(){
+  if(activeAnswered) return;
+  activeAnswered = true;
+
+  // Reveal correct answer, mark as timeout
+  const q = activeQuestions[activeIndex];
+  $$("#quizBody .q-opt").forEach((el,i)=>{
+    el.classList.add("disabled");
+    if(i === q.answer) el.classList.add("right");
+  });
+
+  showFeedback("⏰ Time's up! No point awarded.", "timeout");
+
+  setTimeout(()=>{
+    nextQuestion();
+  }, 1600);
+}
+
+function renderQuizQuestion(){
+  const q = activeQuestions[activeIndex];
+  if(!q){ finishMatch(); return; }
+
+  const letters = ["A","B","C","D","E","F"];
+  const currentTeam = activeIndex % 2 === 0 ? activeMatch.teamA : activeMatch.teamB;
+  const otherTeam = activeIndex % 2 === 0 ? activeMatch.teamB : activeMatch.teamA;
+
+  $("#quizProgress").innerHTML =
+    `Question <b>${activeIndex+1}</b> of <b>${activeQuestions.length}</b>`;
+
+  // Scoreboard + question
+  let html = `
+    <div class="scoreboard">
+      <div class="sb-team">
+        <span class="sb-flag">${activeMatch.teamA.flag}</span>
+        <div class="sb-info">
+          <div class="sb-name">${esc(activeMatch.teamA.name)}</div>
+          ${currentTeam.id === activeMatch.teamA.id ? '<div class="sb-active">● Now playing</div>' : ''}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div class="sb-score">${activeScoreA} – ${activeScoreB}</div>
+        <div class="sb-vs">LIVE</div>
+      </div>
+      <div class="sb-team right">
+        <span class="sb-flag">${activeMatch.teamB.flag}</span>
+        <div class="sb-info">
+          <div class="sb-name">${esc(activeMatch.teamB.name)}</div>
+          ${currentTeam.id === activeMatch.teamB.id ? '<div class="sb-active">● Now playing</div>' : ''}
+        </div>
+      </div>
+    </div>
+    <div class="q-topic">${esc(activeMatch.topic)} · ${currentTeam.id===activeMatch.teamA.id?'Team A':'Team B'} answering</div>
+    <p class="q-text">${esc(q.q)}</p>
+    <div class="q-options">`;
+
+  q.options.forEach((opt,i)=>{
+    html += `<div class="q-opt" data-opt="${i}">
+      <span class="ltr">${letters[i]}</span>
+      <span>${esc(opt)}</span>
+    </div>`;
+  });
+  html += `</div><div class="feedback" id="feedback"></div>`;
+
+  $("#quizBody").innerHTML = html;
+  $("#quizSubmit").disabled = true;
+  $("#quizSubmit").textContent = "Submit Answer";
+  activeSelection = null;
+  activeAnswered = false;
+
+  $$("#quizBody .q-opt").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      if(activeAnswered) return;
+      $$("#quizBody .q-opt").forEach(o=>o.classList.remove("sel"));
+      el.classList.add("sel");
+      activeSelection = Number(el.dataset.opt);
+      $("#quizSubmit").disabled = false;
+    });
+  });
+
+  startTimer();
+}
+
+function showFeedback(msg, type){
+  const fb = $("#feedback");
+  if(!fb) return;
+  fb.textContent = msg;
+  fb.className = "feedback show " + type;
+}
+
+function submitQuizAnswer(){
+  if(activeSelection===null || activeAnswered) return;
+  activeAnswered = true;
+  clearTimer();
+
+  const q = activeQuestions[activeIndex];
+  const correct = q.answer;
+  const isRight = activeSelection === correct;
+
+  $$("#quizBody .q-opt").forEach((el,i)=>{
+    el.classList.add("disabled");
+    el.classList.remove("sel");
+    if(i === correct){
+      el.classList.add("right");
+      el.insertAdjacentHTML('beforeend', '<span class="mark">✓</span>');
+    } else if(i === activeSelection && !isRight){
+      el.classList.add("wrong");
+      el.insertAdjacentHTML('beforeend', '<span class="mark">✗</span>');
+    }
+  });
+
+  if(isRight){
+    if(activeIndex % 2 === 0) activeScoreA++;
+    else activeScoreB++;
+    const team = activeIndex % 2 === 0 ? activeMatch.teamA : activeMatch.teamB;
+    showFeedback(`✅ Correct! +1 for ${team.name}`, "correct");
+  } else {
+    const team = activeIndex % 2 === 0 ? activeMatch.teamA : activeMatch.teamB;
+    showFeedback(`❌ Wrong answer — no point for ${team.name}`, "wrong");
+  }
+
+  // Update scoreboard live
+  const sbScore = document.querySelector(".sb-score");
+  if(sbScore) sbScore.textContent = `${activeScoreA} – ${activeScoreB}`;
+
+  setTimeout(()=>{
+    nextQuestion();
+  }, 1500);
+}
+
+function nextQuestion(){
+  activeIndex++;
+  if(activeIndex >= activeQuestions.length){
+    finishMatch();
+  } else {
+    renderQuizQuestion();
+  }
+}
+
+function finishMatch(){
+  clearTimer();
+
+  // Sudden death on tie
+  if(activeScoreA === activeScoreB){
+    const extra = shuffle([...QUESTION_BANK[activeMatch.topic]])[0];
+    activeQuestions.push(extra);
+    renderQuizQuestion();
+    return;
+  }
+
+  activeMatch.scoreA = activeScoreA;
+  activeMatch.scoreB = activeScoreB;
+  activeMatch.done = true;
+
+  const winner = activeScoreA > activeScoreB ? activeMatch.teamA : activeMatch.teamB;
+  advanceWinner(activeMatch, winner);
+
+  saveState();
+  $("#quizModal").close();
+  renderAll();
+}
+
+function advanceWinner(match, winner){
+  const round = match.round;
+  let nextRound = null;
+  if(round==="Quarter-Final") nextRound = "Semi-Final";
+  else if(round==="Semi-Final") nextRound = "Final";
+  else if(round==="Final"){ state.champion = winner; return; }
+
+  const sameRound = state.matches.filter(m=>m.round===round);
+  const idx = sameRound.findIndex(m=>m.id===match.id);
+  const targetIndex = round==="Quarter-Final" ? (idx < 2 ? 0 : 1) : 0;
+
+  const nextMatches = state.matches.filter(m=>m.round===nextRound);
+  if(nextMatches.length <= targetIndex){
+    const newMatch = {
+      id: uid(), round: nextRound,
+      teamA: null, teamB: null,
+      scoreA: null, scoreB: null, done:false, topic:null
+    };
+    const slot = nextMatches.length % 2 === 0 ? "A" : "B";
+    if(slot==="A") newMatch.teamA = winner; else newMatch.teamB = winner;
+    state.matches.push(newMatch);
+    return;
+  }
+  const target = nextMatches[targetIndex];
+  if(!target.teamA) target.teamA = winner;
+  else if(!target.teamB) target.teamB = winner;
+  else {
+    state.matches.push({
+      id: uid(), round: nextRound,
+      teamA: winner, teamB: null,
+      scoreA: null, scoreB: null, done:false, topic:null
+    });
+  }
+}
+
+/* =========================================================
+   RENDER: STATS
+   ========================================================= */
+function renderStats(){
+  const students = [...state.students].sort((a,b)=>{
+    if(b.points!==a.points) return b.points-a.points;
+    return (b.goalsFor-b.goalsAgainst)-(a.goalsFor-a.goalsAgainst);
+  });
+  const played = state.students.reduce((s,t)=>s+t.played,0)/2;
+  const totalGoals = state.students.reduce((s,t)=>s+t.goalsFor,0);
+  const avgGoals = played ? (totalGoals/played).toFixed(1) : "0.0";
+
+  let html = `<div class="section-title">📊 Statistics</div>
+    <div class="strip">
+      <div class="chip"><div class="chip-ico g">⚽</div>
+        <div class="chip-body"><span class="chip-k">Total Goals</span><span class="chip-v">${totalGoals}</span></div></div>
+      <div class="chip"><div class="chip-ico y">📈</div>
+        <div class="chip-body"><span class="chip-k">Avg Goals / Match</span><span class="chip-v">${avgGoals}</span></div></div>
+      <div class="chip"><div class="chip-ico b">🎯</div>
+        <div class="chip-body"><span class="chip-k">Matches Played</span><span class="chip-v">${played}</span></div></div>
+    </div>
+    <div class="group-card">
+      <div class="group-head"><span>🏆 Overall Standings</span><span class="grp-tag">All groups</span></div>
+      <table class="group-table">
+        <thead><tr><th>Student</th><th>Class</th><th>Group</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead>
+        <tbody>`;
+  students.forEach(t=>{
+    const gd = t.goalsFor - t.goalsAgainst;
+    html += `<tr>
+      <td>${t.flag} ${esc(t.name)}</td>
+      <td>${t.className}</td><td>${t.group}</td>
+      <td>${t.played}</td><td>${t.won}</td><td>${t.drawn}</td><td>${t.lost}</td>
+      <td>${t.goalsFor}</td><td>${t.goalsAgainst}</td>
+      <td>${gd>=0?"+":""}${gd}</td>
+      <td><b>${t.points}</b></td>
+    </tr>`;
+  });
+  html += `</tbody></table></div>`;
+  $("#content").innerHTML = html;
+}
+
+/* =========================================================
+   RENDER: TOPICS
+   ========================================================= */
+function renderTopics(){
+  let html = `<div class="section-title">📚 Topics in the Tournament</div><div class="groups">`;
+  state.topics.forEach(t=>{
+    const bank = QUESTION_BANK[t] || [];
+    html += `<div class="group-card">
+      <div class="group-head"><span>${esc(t)}</span><span class="grp-tag">${bank.length} Qs</span></div>
+      <div style="padding:14px 16px;font-size:12.5px;color:#475569;font-weight:600;line-height:1.6">
+        ${bank.length ? "Sample: " + esc(bank[0].q) : "No questions yet."}
+      </div>
+    </div>`;
+  });
+  html += `</div>
+    <div style="margin-top:18px">
+      <button class="btn primary" id="btnAddTopic">+ Add Topic</button>
+      <button class="btn" id="btnAddQuestion">+ Add Question</button>
+    </div>`;
+  $("#content").innerHTML = html;
+  $("#btnAddTopic").addEventListener("click", addTopic);
+  $("#btnAddQuestion").addEventListener("click", addQuestion);
+}
+
+/* =========================================================
+   MAIN RENDER
+   ========================================================= */
+function renderAll(){
+  renderStrip();
+  if(state.tab==="groups")      renderGroups();
+  else if(state.tab==="bracket") renderBracket();
+  else if(state.tab==="stats")   renderStats();
+  else if(state.tab==="topics")  renderTopics();
+  saveState();
+}
+
+/* =========================================================
+   TABS
+   ========================================================= */
+$("#tabs").addEventListener("click", e=>{
+  const t = e.target.closest(".tab");
+  if(!t) return;
+  state.tab = t.dataset.tab;
+  $$(".tab").forEach(x=>x.classList.toggle("active", x===t));
+  renderAll();
+});
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+$("#search").addEventListener("input", e=>{
+  state.search = e.target.value;
+  if(state.tab==="groups") renderGroups();
+  else if(state.tab==="bracket") renderBracket();
+  else if(state.tab==="stats") renderStats();
+});
+
+/* =========================================================
+   GENERIC MODAL
+   ========================================================= */
+let modalHandler = null;
+function openModal(title, fields, onSubmit){
+  $("#modalTitle").textContent = title;
+  $("#modalBody").innerHTML = fields.map(f=>{
+    if(f.type==="select"){
+      return `<label class="field"><span>${esc(f.label)}</span>
+        <select name="${esc(f.name)}">
+          ${f.options.map(o=>`<option value="${esc(o.value)}" ${o.value===f.value?'selected':''}>${esc(o.label)}</option>`).join("")}
+        </select></label>`;
+    }
+    if(f.type==="textarea"){
+      return `<label class="field"><span>${esc(f.label)}</span>
+        <textarea name="${esc(f.name)}" rows="3">${esc(f.value||"")}</textarea></label>`;
+    }
+    return `<label class="field"><span>${esc(f.label)}</span>
+      <input name="${esc(f.name)}" type="${esc(f.type)}" value="${esc(f.value??'')}"
+        ${f.min!=null?`min="${f.min}"`:""} ${f.max!=null?`max="${f.max}"`:""}
+        ${f.step!=null?`step="${f.step}"`:""} ${f.required?"required":""}></label>`;
+  }).join("");
+  modalHandler = onSubmit;
+  $("#modal").showModal();
+}
+$("#modalForm").addEventListener("submit", e=>{
+  e.preventDefault();
+  const data = {};
+  new FormData(e.target).forEach((v,k)=>data[k]=v);
+  const h = modalHandler; modalHandler = null;
+  $("#modal").close();
+  if(h) h(data);
+});
+$("#modalCancel").addEventListener("click", ()=>{ modalHandler=null; $("#modal").close(); });
+
+/* =========================================================
+   MANAGE STUDENTS
+   ========================================================= */
+function openManage(){
+  renderManageList();
+  $("#manageModal").showModal();
+}
+function renderManageList(){
+  const list = $("#manageList");
+  const byClass = {};
+  state.students.forEach(s=>{
+    if(!byClass[s.className]) byClass[s.className] = [];
+    byClass[s.className].push(s);
+  });
+
+  list.innerHTML = Object.keys(byClass).sort().map(cls=>{
+    return byClass[cls].map(s=>`
+      <div class="student-row" data-id="${s.id}">
+        <div class="avatar">${(s.name[0]||'?').toUpperCase()}</div>
+        <input class="nm" type="text" value="${esc(s.name)}" data-name="${s.id}">
+        <span style="font-size:11px;font-weight:700;color:#94a3b8">${esc(s.className)}</span>
+        <select class="grp" data-group="${s.id}">
+          ${state.groups.map(g=>`<option value="${g}" ${s.group===g?'selected':''}>Group ${g}</option>`).join("")}
+        </select>
+        <button class="del" data-del="${s.id}" title="Remove">✕</button>
+      </div>
+    `).join("");
+  }).join("");
+
+  list.querySelectorAll("[data-del]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.del;
+      const s = state.students.find(x=>x.id===id);
+      if(!s) return;
+      if(!confirm(`Remove ${s.name} from the tournament?`)) return;
+      state.students = state.students.filter(x=>x.id!==id);
+      state.matches.forEach(m=>{
+        if(m.teamA && m.teamA.id===id) m.teamA = null;
+        if(m.teamB && m.teamB.id===id) m.teamB = null;
+      });
+      saveState();
+      renderManageList();
+      renderAll();
+    });
+  });
+}
+$("#manageAddBtn").addEventListener("click", ()=>addStudentModal(true));
+$("#manageCancel").addEventListener("click", ()=>$("#manageModal").close());
+$("#manageClose").addEventListener("click", ()=>$("#manageModal").close());
+$("#manageSave").addEventListener("click", ()=>{
+  state.students.forEach(s=>{
+    const nmInp = $(`input[data-name="${s.id}"]`);
+    const grpSel = $(`select[data-group="${s.id}"]`);
+    if(nmInp) s.name = nmInp.value.trim() || s.name;
+    if(grpSel) s.group = grpSel.value;
+  });
+  saveState();
+  $("#manageModal").close();
+  renderAll();
+});
+$("#btnManage").addEventListener("click", openManage);
+
+/* =========================================================
+   ADD STUDENT
+   ========================================================= */
+function addStudentModal(fromManage){
+  const classOptions = [
+    {value:'6A', label:'Class 6A'},
+    {value:'6C', label:'Class 6C'}
+  ];
+  const groupOptions = state.groups.map(g=>({value:g, label:'Group '+g}));
+  openModal("Add Student", [
+    {label:"Student name", name:"name", type:"text", value:"", required:true},
+    {label:"Class", name:"className", type:"select", options:classOptions, value:'6A'},
+    {label:"Group", name:"group", type:"select", options:groupOptions, value:'A'}
+  ], d=>{
+    const name = d.name.trim();
+    if(!name) return;
+    state.students.push({
+      id: uid(), name,
+      className: d.className,
+      flag: FLAG_POOL[state.students.length % FLAG_POOL.length],
+      group: d.group,
+      played:0, won:0, drawn:0, lost:0,
+      points:0, goalsFor:0, goalsAgainst:0
+    });
+    saveState();
+    if(fromManage) renderManageList();
+    renderAll();
+  });
+}
+$("#btnAddStudent").addEventListener("click", ()=>addStudentModal(false));
+
+/* =========================================================
+   RESET
+   ========================================================= */
+$("#btnResetTournament").addEventListener("click", ()=>{
+  if(!confirm("Reset the whole tournament?\nThis clears all progress, scores, and the champion.")) return;
+  state = buildDefaultState();
+  state.tab = "groups";
+  saveState();
+  $$(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab==="groups"));
+  renderAll();
+});
+
+/* =========================================================
+   QUIZ EVENTS
+   ========================================================= */
+$("#quizClose").addEventListener("click", ()=>{
+  clearTimer();
+  $("#quizModal").close();
+  activeMatch = null;
+});
+$("#quizCancel").addEventListener("click", ()=>{
+  clearTimer();
+  $("#quizModal").close();
+  activeMatch = null;
+});
+$("#quizSubmit").addEventListener("click", submitQuizAnswer);
+
+/* =========================================================
+   CONTENT DELEGATION
+   ========================================================= */
+$("#content").addEventListener("click", e=>{
+  const play = e.target.closest("[data-play]");
+  if(play){ startMatch(play.dataset.play); return; }
+});
+
+/* =========================================================
+   TOPIC / QUESTION ADDITION
+   ========================================================= */
+function addTopic(){
+  openModal("Add Topic", [
+    {label:"Topic name", name:"name", type:"text", value:"", required:true}
+  ], d=>{
+    const name = d.name.trim();
+    if(!name) return;
+    if(!state.topics.includes(name)){
+      state.topics.push(name);
+      if(!QUESTION_BANK[name]) QUESTION_BANK[name] = [];
+      saveState();
+      renderTopics();
+    }
+  });
+}
+function addQuestion(){
+  const topicOptions = state.topics.map(t=>({value:t,label:t}));
+  openModal("Add Question", [
+    {label:"Topic", name:"topic", type:"select", options:topicOptions, value:state.topics[0]},
+    {label:"Question", name:"q", type:"textarea", value:"", required:true},
+    {label:"Option A", name:"a", type:"text", value:"", required:true},
+    {label:"Option B", name:"b", type:"text", value:"", required:true},
+    {label:"Option C", name:"c", type:"text", value:"", required:true},
+    {label:"Option D", name:"d", type:"text", value:"", required:true},
+    {label:"Correct answer", name:"answer", type:"select",
+      options:[{value:"0",label:"A"},{value:"1",label:"B"},{value:"2",label:"C"},{value:"3",label:"D"}],
+      value:"0"}
+  ], d=>{
+    const topic = d.topic;
+    if(!QUESTION_BANK[topic]) QUESTION_BANK[topic] = [];
+    QUESTION_BANK[topic].push({
+      q: d.q.trim(),
+      options: [d.a.trim(), d.b.trim(), d.c.trim(), d.d.trim()],
+      answer: Number(d.answer)
+    });
+    saveState();
+    renderTopics();
+  });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+renderAll();
+</script>
+</body>
+</html>
